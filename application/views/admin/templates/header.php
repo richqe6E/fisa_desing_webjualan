@@ -9,7 +9,7 @@ $this->load->view('admin/templates/head', array('title' => isset($title) ? $titl
 		<div class="a-side-brand">
 			<a class="a-brand" href="<?php echo base_url('admin/dashboard'); ?>">
 <?php if ( ! empty($this->store->logo)): ?>
-				<img src="<?php echo base_url('assets/uploads/logos/' . html_escape($this->store->logo)); ?>" alt="">
+				<img src="<?php echo upload_asset_url($this->store->logo, 'logos'); ?>" alt="">
 <?php else: ?>
 				<span class="a-mark"><i class="bi bi-bag"></i></span>
 <?php endif; ?>

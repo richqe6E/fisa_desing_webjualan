@@ -153,29 +153,61 @@ if ( ! function_exists('meta_description'))
 	}
 }
 
+if ( ! function_exists('upload_asset_url'))
+{
+	/**
+	 * URL gambar unggahan:
+	 * - Jika diawali http(s) -> dikembalikan apa adanya
+	 * - Jika file ada di disk lokal (assets/uploads/...) -> gunakan base_url()
+	 * - Jika Supabase Storage aktif -> gunakan URL public CDN Supabase
+	 * - Fallback -> base_url lokal
+	 */
+	function upload_asset_url($fileName, $folder = 'products', $fallback = '')
+	{
+		$fileName = trim((string) $fileName);
+
+		if ($fileName === '')
+		{
+			return $fallback !== '' ? base_url($fallback) : '';
+		}
+
+		if (preg_match('#^https?://#i', $fileName))
+		{
+			return $fileName;
+		}
+
+		$folderClean = trim($folder, '/');
+		$localRel    = 'assets/uploads/' . $folderClean . '/' . $fileName;
+
+		// 1. Cek disk lokal jika file ada (mis. seed bawaan yang ikut git)
+		if (is_file(FCPATH . $localRel))
+		{
+			return base_url($localRel);
+		}
+
+		// 2. Cek Supabase Storage jika dikonfigurasi via env
+		$supabaseUrl = getenv('SUPABASE_URL') ?: (isset($_ENV['SUPABASE_URL']) ? $_ENV['SUPABASE_URL'] : (isset($_SERVER['SUPABASE_URL']) ? $_SERVER['SUPABASE_URL'] : ''));
+		if ( ! empty($supabaseUrl))
+		{
+			$bucket = getenv('SUPABASE_BUCKET') ?: (isset($_ENV['SUPABASE_BUCKET']) ? $_ENV['SUPABASE_BUCKET'] : (isset($_SERVER['SUPABASE_BUCKET']) ? $_SERVER['SUPABASE_BUCKET'] : 'uploads'));
+			return rtrim($supabaseUrl, '/') . '/storage/v1/object/public/' . $bucket . '/' . $folderClean . '/' . rawurlencode($fileName);
+		}
+
+		return base_url($localRel);
+	}
+}
+
 if ( ! function_exists('hero_image_url'))
 {
 	/**
 	 * Ubah nilai kolom stores.hero_pill1 / hero_pill2 jadi URL gambar judul beranda.
 	 * - '' (atau NULL)  -> '' (gambar disembunyikan)
 	 * - diawali http(s) -> dipakai apa adanya (foto bawaan dari Unsplash)
-	 * - selain itu      -> nama file di assets/uploads/hero/
+	 * - selain itu      -> URL dari upload_asset_url (lokal atau Supabase Storage)
 	 */
 	function hero_image_url($value)
 	{
-		$value = trim((string) $value);
-
-		if ($value === '')
-		{
-			return '';
-		}
-
-		if (preg_match('#^https?://#i', $value))
-		{
-			return $value;
-		}
-
-		return base_url('assets/uploads/hero/' . rawurlencode(basename($value)));
+		return upload_asset_url($value, 'hero');
 	}
 }
 

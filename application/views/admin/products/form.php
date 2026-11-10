@@ -45,7 +45,7 @@ $isEdit = isset($product) && $product !== NULL;
 			<div class="a-gallery">
 				<?php foreach ($images as $img): ?>
 					<span class="a-gallery-item">
-						<img src="<?php echo base_url('assets/uploads/products/' . html_escape($img->file_name)); ?>" alt="">
+						<img src="<?php echo upload_asset_url($img->file_name, 'products'); ?>" alt="">
 						<label>
 							<input type="checkbox" name="delete_images[]" value="<?php echo (int) $img->id; ?>">Hapus
 						</label>
@@ -103,7 +103,7 @@ $isEdit = isset($product) && $product !== NULL;
 
 			<?php if ($isEdit && $product->image): ?>
 				<div class="a-logo-preview">
-					<img src="<?php echo base_url('assets/uploads/products/' . html_escape($product->image)); ?>" alt="Cover">
+					<img src="<?php echo upload_asset_url($product->image, 'products'); ?>" alt="Cover">
 					<span class="a-hint">Cover saat ini</span>
 				</div>
 			<?php endif; ?>

@@ -133,12 +133,12 @@ class Api extends CI_Controller {
 
 		if ($product->image !== NULL && $product->image !== '')
 		{
-			$photos[] = base_url('assets/uploads/products/' . $product->image);
+			$photos[] = upload_asset_url($product->image, 'products');
 		}
 
 		foreach ($images as $image)
 		{
-			$photos[] = base_url('assets/uploads/products/' . $image->file_name);
+			$photos[] = upload_asset_url($image->file_name, 'products');
 		}
 
 		// Foto cadangan bila produk belum memiliki gambar

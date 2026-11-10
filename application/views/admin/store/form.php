@@ -133,7 +133,7 @@ $heroPill2 = trim((string) ($store->hero_pill2 ?? ''));
 	<div class="a-field">
 <?php if ( ! empty($store->logo)): ?>
 		<div class="a-logo-preview">
-			<img src="<?php echo base_url('assets/uploads/logos/' . html_escape($store->logo)); ?>" alt="Logo">
+			<img src="<?php echo upload_asset_url($store->logo, 'logos'); ?>" alt="Logo">
 			<span class="a-hint">Logo saat ini</span>
 		</div>
 <?php endif; ?>

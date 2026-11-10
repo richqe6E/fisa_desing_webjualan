@@ -25,7 +25,7 @@ if ($pageDesc === '')
 $ogImage = trim((string) (isset($og_image) ? $og_image : ''));
 if ($ogImage === '' && ! empty($this->store->logo))
 {
-	$ogImage = base_url('assets/uploads/logos/' . $this->store->logo);
+	$ogImage = upload_asset_url($this->store->logo, 'logos');
 }
 if ($ogImage === '')
 {
@@ -41,7 +41,7 @@ $canonical = base_url(uri_string());
 // Favicon: logo toko bila ada, kalau tidak pakai tanda bintang (SVG inline).
 if ( ! empty($this->store->logo))
 {
-	$favicon     = base_url('assets/uploads/logos/' . $this->store->logo);
+	$favicon     = upload_asset_url($this->store->logo, 'logos');
 	$logoExt     = strtolower(pathinfo($this->store->logo, PATHINFO_EXTENSION));
 	$faviconType = ($logoExt === 'png') ? 'image/png' : (($logoExt === 'gif') ? 'image/gif' : 'image/jpeg');
 }
@@ -103,7 +103,7 @@ else
 <header class="site-header" id="siteHeader"><div class="nav container">
 	<a href="<?php echo base_url(); ?>" class="logo">
 <?php if ( ! empty($this->store->logo)): ?>
-		<img class="logo-img" src="<?php echo base_url('assets/uploads/logos/' . html_escape($this->store->logo)); ?>" alt="<?php echo html_escape($storeName); ?>" width="26" height="26"><?php echo html_escape($storeName); ?>
+		<img class="logo-img" src="<?php echo upload_asset_url($this->store->logo, 'logos'); ?>" alt="<?php echo html_escape($storeName); ?>" width="26" height="26"><?php echo html_escape($storeName); ?>
 <?php else: ?>
 		<svg class="logo-mark" viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 0c1 6.5 5.500 11 12 12-6.500 1-11 5.500-12 12-1-6.500-5.500-11-12-12C6.500 11 11 6.500 12 0z"/></svg><?php echo html_escape($storeName); ?>
 <?php endif; ?>

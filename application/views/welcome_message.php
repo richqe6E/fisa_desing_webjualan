@@ -23,9 +23,9 @@ if ($heroLine2 === '')
 	$heroLine2 = 'dengan [gambar] Harga Bersahabat';
 }
 // Urutan: hero besar = produk ke-1, mini kanan = ke-2 & ke-3, CTA = ke-4 (tidak boleh dobel).
-$heroMain     = ! empty($withImages[0]) ? base_url('assets/uploads/products/' . $withImages[0]->image) : $fallbackHero;
+$heroMain     = ! empty($withImages[0]) ? upload_asset_url($withImages[0]->image, 'products', $fallbackHero) : $fallbackHero;
 $heroMinis    = array_slice($withImages, 1, 2);
-$ctaImage     = ! empty($withImages[3]) ? base_url('assets/uploads/products/' . $withImages[3]->image) : $fallbackCta;
+$ctaImage     = ! empty($withImages[3]) ? upload_asset_url($withImages[3]->image, 'products', $fallbackCta) : $fallbackCta;
 ?>
 
 <!-- Hero -->
@@ -41,7 +41,7 @@ $ctaImage     = ! empty($withImages[3]) ? base_url('assets/uploads/products/' . 
 		<div class="hero-side">
 <?php if ( ! empty($heroMinis)): ?>
 <?php foreach ($heroMinis as $heroProduct): ?>
-			<a class="mini" href="<?php echo base_url('produk/' . html_escape($heroProduct->slug)); ?>"><img width="300" height="200" src="<?php echo base_url('assets/uploads/products/' . html_escape($heroProduct->image)); ?>" alt="<?php echo html_escape($heroProduct->name); ?>"><div><span><?php echo html_escape($heroProduct->name); ?><small class="stars"><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i></small></span><strong><?php echo format_rupiah($heroProduct->price); ?></strong></div></a>
+			<a class="mini" href="<?php echo base_url('produk/' . html_escape($heroProduct->slug)); ?>"><img width="300" height="200" src="<?php echo upload_asset_url($heroProduct->image, 'products'); ?>" alt="<?php echo html_escape($heroProduct->name); ?>"><div><span><?php echo html_escape($heroProduct->name); ?><small class="stars"><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i></small></span><strong><?php echo format_rupiah($heroProduct->price); ?></strong></div></a>
 <?php endforeach; ?>
 <?php else: ?>
 			<a class="mini" href="<?php echo base_url('produk'); ?>"><img width="300" height="200" src="https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=420&h=300&q=75" alt=""><div><span>Koleksi terbaru<small class="stars"><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i></small></span><strong><?php echo format_rupiah(0); ?></strong></div></a>

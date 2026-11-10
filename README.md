@@ -136,12 +136,18 @@ Jika menggunakan Supabase sebagai database:
 
 Aplikasi ini berbasis CodeIgniter 3 (PHP).
 
-### Pilihan A: Vercel (Serverless)
+### Pilihan A: Vercel + Supabase Storage (100% Gratis)
 - Konfigurasi telah disediakan di `vercel.json` (runtime `vercel-php`).
-- Di Vercel Dashboard -> **Settings** -> **Environment Variables**, tambahkan:
-  - `DATABASE_URL`: URI connection string database Supabase/MySQL Anda.
+- **Penyimpanan Gambar**: Karena filesystem serverless Vercel bersifat *read-only*, aplikasi ini sudah diintegrasikan langsung dengan **Supabase Storage**. Gambar produk dan logo yang diunggah lewat admin akan otomatis tersimpan permanen di cloud Supabase.
+- **Langkah Setup di Supabase Storage**:
+  1. Buka menu **Storage** di Supabase Dashboard.
+  2. Buat bucket baru bernama `uploads`, lalu centang **Public bucket**.
+- **Environment Variables di Vercel Dashboard** (Settings -> Environment Variables):
+  - `DATABASE_URL`: URI connection string Supabase (Transaction Pooler port 6543).
   - `APP_BASE_URL`: `https://[nama-projek].vercel.app/`
-- > **PENTING (Catatan Vercel):** Karena filesystem serverless Vercel bersifat *read-only* (ephemeral), fitur upload gambar produk baru melalui panel admin tidak dapat disimpan permanen di server disk Vercel.
+  - `SUPABASE_URL`: `https://zkhrqqsfvymevqlrrfyo.supabase.co`
+  - `SUPABASE_KEY`: Kunci API Supabase Anda (`sb_publishable_...` atau service key)
+  - `SUPABASE_BUCKET`: `uploads`
 
 ### Pilihan B: Railway / Render / cPanel (Direkomendasikan untuk PHP Monolith)
 - Platform dengan web server native (Apache/Nginx + PHP 8.2) dan persistent disk, sehingga upload produk, session, dan konfigurasi berjalan 100% lancar tanpa batasan serverless.

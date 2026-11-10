@@ -29,7 +29,7 @@
 						<tr>
 							<td>
 								<?php if ($p->image): ?>
-									<img class="a-thumb" src="<?php echo base_url('assets/uploads/products/' . html_escape($p->image)); ?>" alt="">
+									<img class="a-thumb" src="<?php echo upload_asset_url($p->image, 'products'); ?>" alt="">
 								<?php else: ?>
 									<span class="a-thumb-empty"><i class="bi bi-image"></i></span>
 								<?php endif; ?>

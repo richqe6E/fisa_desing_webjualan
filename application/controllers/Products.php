@@ -102,7 +102,7 @@ class Products extends MY_Controller {
 		}
 		if ($ogImage !== '')
 		{
-			$data['og_image'] = base_url('assets/uploads/products/' . $ogImage);
+			$data['og_image'] = upload_asset_url($ogImage, 'products');
 		}
 		else
 		{
