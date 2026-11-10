@@ -84,9 +84,15 @@ class Products extends MY_Controller {
 			return;
 		}
 
-		// Catat views, lalu naikkan angka di memori agar view menampilkan angka terbaru
-		$this->Product_model->incrementViews($product->id);
-		$product->views = (int) $product->views + 1;
+		// Catat views produk secara unik per sesi pengunjung (refresh tidak menambah angka berulang kali)
+		$viewed = (array) $this->session->userdata('viewed_products');
+		if ( ! in_array($product->id, $viewed, TRUE))
+		{
+			$this->Product_model->incrementViews($product->id);
+			$product->views = (int) $product->views + 1;
+			$viewed[] = $product->id;
+			$this->session->set_userdata('viewed_products', $viewed);
+		}
 
 		$data['title']       = $product->name;
 		$data['description'] = meta_description($product->description);
