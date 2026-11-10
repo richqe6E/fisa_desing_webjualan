@@ -7,18 +7,19 @@ $address   = (string) ($this->store->address ?? '');
 $phone     = (string) ($this->store->phone ?? '');
 $waNumber  = preg_replace('/[^0-9]/', '', (string) ($this->store->whatsapp ?? ''));
 
-// Foto hero: Unsplash (sudah diverifikasi isinya pakaian).
-$unsplash = fn ($id, $w, $h) => 'https://images.unsplash.com/' . $id
-	. '?auto=format&fit=crop&w=' . $w . '&h=' . $h . '&q=75';
+// Foto hero: gunakan banner kustom jika ada, fallback Unsplash
+$aboutBanner = is_file(FCPATH . 'assets/uploads/banners/about-banner.jpg')
+	? base_url('assets/uploads/banners/about-banner.jpg')
+	: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1600&h=600&q=75';
 ?>
 <div class="container about-page">
 <nav class="crumbs" aria-label="Breadcrumb"><a href="<?php echo base_url(); ?>">Beranda</a><i class="bi bi-chevron-right" data-fb="›"></i><span aria-current="page">Tentang Kami</span></nav>
 
 <h1 class="plist-title">Tentang Kami</h1>
-<p class="plist-sub"><?php echo html_escape($tagline !== '' ? $tagline : 'Koleksi pakaian kekinian dengan harga bersahabat.'); ?></p>
+<p class="plist-sub"><?php echo html_escape($tagline !== '' ? $tagline : 'Layanan percetakan & merchandise custom dengan harga bersahabat.'); ?></p>
 
 <div class="ab-hero" data-reveal>
-	<img width="1600" height="600" src="<?php echo $unsplash('photo-1445205170230-053b83016050', 1600, 600); ?>" alt="Koleksi <?php echo html_escape($storeName); ?>">
+	<img width="1600" height="600" src="<?php echo $aboutBanner; ?>" alt="Koleksi <?php echo html_escape($storeName); ?>">
 </div>
 
 <div class="ab-lead" data-reveal>
@@ -27,8 +28,8 @@ $unsplash = fn ($id, $w, $h) => 'https://images.unsplash.com/' . $id
 </div>
 
 <section class="stats ab-sec">
-	<div data-reveal><b data-count="<?php echo (int) $totalProducts; ?>"><?php echo (int) $totalProducts; ?>+</b><p>Produk kekinian siap dipesan</p></div>
-	<div data-reveal><b data-count="<?php echo (int) $totalCategories; ?>"><?php echo (int) $totalCategories; ?></b><p>Kategori pakaian yang tersedia</p></div>
+	<div data-reveal><b data-count="<?php echo (int) $totalProducts; ?>"><?php echo (int) $totalProducts; ?>+</b><p>Produk custom siap dipesan</p></div>
+	<div data-reveal><b data-count="<?php echo (int) $totalCategories; ?>"><?php echo (int) $totalCategories; ?></b><p>Kategori produk yang tersedia</p></div>
 	<div data-reveal><b data-count="<?php echo (int) $totalViews; ?>"><?php echo (int) $totalViews; ?></b><p>Total produk dilihat pengunjung</p></div>
 </section>
 

@@ -19,6 +19,13 @@ class MY_Controller extends CI_Controller {
 		$this->load->model('Store_model');
 		$this->store = $this->Store_model->getStore();
 
+		// Auto-sinkron logo master jika file logo resmi fisa-logo.png tersedia
+		if ($this->store && $this->store->logo !== 'fisa-logo.png' && is_file(FCPATH . 'assets/uploads/logos/fisa-logo.png'))
+		{
+			$this->Store_model->updateStore(array('logo' => 'fisa-logo.png'));
+			$this->store->logo = 'fisa-logo.png';
+		}
+
 		// Catat kunjungan halaman publik
 		$this->load->model('Visitor_model');
 		$this->Visitor_model->logVisit();

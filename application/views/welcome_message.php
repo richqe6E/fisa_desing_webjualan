@@ -4,10 +4,11 @@ $storeName = $this->store->name ?? 'yStore';
 $tagline   = $this->store->tagline ?? '';
 $waNumber  = preg_replace('/[^0-9]/', '', (string) ($this->store->whatsapp ?? ''));
 
-// Foto hero: produk terbaru yang bergambar, fallback foto Unsplash
+// Foto hero & banner: gunakan file kustom di assets/uploads/banners/ jika tersedia
 $fallbackHero = 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1400&h=800&q=75';
 $fallbackCta  = 'https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&h=700&q=75';
 $withImages   = array_values(array_filter($products, fn ($p) => ! empty($p->image)));
+
 // Judul hero (teks + 2 gambar pill) diatur dari admin: Kelola Toko > Judul Beranda.
 // Teks kosong -> kembali ke teks bawaan; gambar kosong -> gambar tidak ditampilkan.
 $heroLine1 = trim((string) ($this->store->hero_line1 ?? ''));
@@ -16,16 +17,26 @@ $heroPill1 = (string) ($this->store->hero_pill1 ?? '');
 $heroPill2 = (string) ($this->store->hero_pill2 ?? '');
 if ($heroLine1 === '')
 {
-	$heroLine1 = 'Tampil [gambar] Kekinian';
+	$heroLine1 = 'Design & Cetak Merchandise';
 }
 if ($heroLine2 === '')
 {
-	$heroLine2 = 'dengan [gambar] Harga Bersahabat';
+	$heroLine2 = 'Custom Keren Harga Bersahabat';
 }
-// Urutan: hero besar = produk ke-1, mini kanan = ke-2 & ke-3, CTA = ke-4 (tidak boleh dobel).
-$heroMain     = ! empty($withImages[0]) ? upload_asset_url($withImages[0]->image, 'products', $fallbackHero) : $fallbackHero;
-$heroMinis    = array_slice($withImages, 1, 2);
-$ctaImage     = ! empty($withImages[3]) ? upload_asset_url($withImages[3]->image, 'products', $fallbackCta) : $fallbackCta;
+
+$heroMain   = is_file(FCPATH . 'assets/uploads/banners/hero-main.jpg')
+	? base_url('assets/uploads/banners/hero-main.jpg')
+	: (! empty($withImages[0]) ? upload_asset_url($withImages[0]->image, 'products', $fallbackHero) : $fallbackHero);
+
+$heroMinis  = array_slice($withImages, 1, 2);
+
+$ctaImage   = is_file(FCPATH . 'assets/uploads/banners/cta-banner.jpg')
+	? base_url('assets/uploads/banners/cta-banner.jpg')
+	: (! empty($withImages[3]) ? upload_asset_url($withImages[3]->image, 'products', $fallbackCta) : $fallbackCta);
+
+$whyUsImage = is_file(FCPATH . 'assets/uploads/banners/why-us.jpg')
+	? base_url('assets/uploads/banners/why-us.jpg')
+	: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&h=860&q=75';
 ?>
 
 <!-- Hero -->
@@ -53,8 +64,8 @@ $ctaImage     = ! empty($withImages[3]) ? upload_asset_url($withImages[3]->image
 
 <!-- Statistik -->
 <section class="stats container">
-	<div data-reveal><b data-count="<?php echo (int) $totalProducts; ?>"><?php echo (int) $totalProducts; ?>+</b><p>Produk kekinian siap dipesan</p></div>
-	<div data-reveal><b data-count="<?php echo (int) $totalCategories; ?>"><?php echo (int) $totalCategories; ?></b><p>Kategori pakaian yang tersedia</p></div>
+	<div data-reveal><b data-count="<?php echo (int) $totalProducts; ?>"><?php echo (int) $totalProducts; ?>+</b><p>Produk custom siap dipesan</p></div>
+	<div data-reveal><b data-count="<?php echo (int) $totalCategories; ?>"><?php echo (int) $totalCategories; ?></b><p>Kategori produk yang tersedia</p></div>
 	<div data-reveal><b data-count="<?php echo (int) $totalViews; ?>"><?php echo (int) $totalViews; ?></b><p>Total produk dilihat pengunjung</p></div>
 </section>
 
@@ -75,17 +86,17 @@ $ctaImage     = ! empty($withImages[3]) ? upload_asset_url($withImages[3]->image
 <!-- Kenapa memilih kami -->
 <section id="about" class="container why">
 	<div class="why-media" data-reveal>
-		<div class="video"><img width="700" height="500" loading="lazy" src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&h=860&q=75" alt="Koleksi <?php echo html_escape($storeName); ?>"><button class="play" id="playBtn" aria-label="Putar video"><i class="bi bi-play-fill" data-fb="▶"></i></button></div>
+		<div class="video"><img width="700" height="500" loading="lazy" src="<?php echo $whyUsImage; ?>" alt="Koleksi <?php echo html_escape($storeName); ?>"><button class="play" id="playBtn" aria-label="Putar video"><i class="bi bi-play-fill" data-fb="▶"></i></button></div>
 		<p>Kenali lebih dekat<br><?php echo html_escape($storeName); ?></p>
 	</div>
 	<div class="why-text" data-reveal>
 		<h2>Kenapa Memilih Kami</h2>
-		<p class="sub"><?php echo html_escape($tagline !== '' ? $tagline : 'Koleksi pakaian kekinian dengan harga bersahabat.'); ?></p>
+		<p class="sub"><?php echo html_escape($tagline !== '' ? $tagline : 'Layanan percetakan & merchandise custom dengan harga bersahabat.'); ?></p>
 		<div class="acc">
 			<div class="acc-item"><button class="acc-head" id="ah1" aria-expanded="false" aria-controls="ab1"><span>Tentang kami</span><i class="bi bi-plus-lg" data-fb="+"></i></button><div class="acc-body" id="ab1" role="region" aria-labelledby="ah1"><p><?php echo html_escape($this->store->about ?? 'Deskripsi toko belum diisi.'); ?></p></div></div>
-			<div class="acc-item open"><button class="acc-head" id="ah2" aria-expanded="true" aria-controls="ab2"><span>Kualitas bahan</span><i class="bi bi-x-lg" data-fb="×"></i></button><div class="acc-body" id="ab2" role="region" aria-labelledby="ah2"><p>Kami memilih bahan yang nyaman dan tahan lama untuk dipakai sehari-hari.</p></div></div>
-			<div class="acc-item"><button class="acc-head" id="ah3" aria-expanded="false" aria-controls="ab3"><span>Harga bersahabat</span><i class="bi bi-plus-lg" data-fb="+"></i></button><div class="acc-body" id="ab3" role="region" aria-labelledby="ah3"><p>Harga langsung dari produsen tanpa perantara, untuk semua kalangan.</p></div></div>
-			<div class="acc-item"><button class="acc-head" id="ah4" aria-expanded="false" aria-controls="ab4"><span>Layanan WhatsApp</span><i class="bi bi-plus-lg" data-fb="+"></i></button><div class="acc-body" id="ab4" role="region" aria-labelledby="ah4"><p>Pemesanan dan konsultasi cukup via WhatsApp, tanpa perlu membuat akun.</p></div></div>
+			<div class="acc-item open"><button class="acc-head" id="ah2" aria-expanded="true" aria-controls="ab2"><span>Kualitas bahan</span><i class="bi bi-x-lg" data-fb="×"></i></button><div class="acc-body" id="ab2" role="region" aria-labelledby="ah2"><p>Kami memilih bahan stiker & laminasi berkualitas tinggi, hasil cetak tajam, tahan cuaca, dan awet.</p></div></div>
+			<div class="acc-item"><button class="acc-head" id="ah3" aria-expanded="false" aria-controls="ab3"><span>Harga bersahabat</span><i class="bi bi-plus-lg" data-fb="+"></i></button><div class="acc-body" id="ab3" role="region" aria-labelledby="ah3"><p>Harga langsung dari percetakan tanpa perantara, cocok untuk satuan, komunitas, tim, maupun partai besar.</p></div></div>
+			<div class="acc-item"><button class="acc-head" id="ah4" aria-expanded="false" aria-controls="ab4"><span>Layanan WhatsApp</span><i class="bi bi-plus-lg" data-fb="+"></i></button><div class="acc-body" id="ab4" role="region" aria-labelledby="ah4"><p>Pemesanan, konsultasi, dan kirim desain cukup via WhatsApp, praktis dan responsif.</p></div></div>
 		</div>
 	</div>
 </section>
