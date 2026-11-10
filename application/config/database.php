@@ -172,8 +172,8 @@ if ($db['default']['dbdriver'] === 'postgre' && !function_exists('pg_connect') &
 	$db['default']['dsn'] = 'pgsql:host=' . $db['default']['hostname'] . ';port=' . $port . ';dbname=' . $db['default']['database'] . ';sslmode=require';
 }
 
-// Aktifkan debug DB agar pesan error tampil jelas jika ada kegagalan koneksi
-$db['default']['db_debug'] = TRUE;
+// Debug DB hanya aktif di mode development demi keamanan produksi
+$db['default']['db_debug'] = (ENVIRONMENT !== 'production');
 
 /*
 |--------------------------------------------------------------------------

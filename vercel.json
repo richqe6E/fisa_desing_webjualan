@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "regions": ["sin1"],
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.3"
@@ -8,6 +9,9 @@
   "routes": [
     {
       "src": "/assets/(.*)",
+      "headers": {
+        "cache-control": "public, max-age=86400, stale-while-revalidate=604800"
+      },
       "dest": "/assets/$1"
     },
     {
