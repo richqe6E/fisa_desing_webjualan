@@ -66,13 +66,11 @@ class Admin_Controller extends CI_Controller {
 		$localFile  = $uploadPath . $fileName;
 
 		// Jika Supabase Storage aktif, kirim file ke cloud
-		$supabaseUrl = getenv('SUPABASE_URL') ?: (isset($_ENV['SUPABASE_URL']) ? $_ENV['SUPABASE_URL'] : (isset($_SERVER['SUPABASE_URL']) ? $_SERVER['SUPABASE_URL'] : ''));
-		$supabaseKey = getenv('SUPABASE_KEY') ?: (isset($_ENV['SUPABASE_KEY']) ? $_ENV['SUPABASE_KEY'] : (isset($_SERVER['SUPABASE_KEY']) ? $_SERVER['SUPABASE_KEY'] : ''));
+		$cfg = $this->getSupabaseConfig();
 
-		if ( ! empty($supabaseUrl) && ! empty($supabaseKey))
+		if ($cfg !== NULL)
 		{
-			$bucket   = getenv('SUPABASE_BUCKET') ?: (isset($_ENV['SUPABASE_BUCKET']) ? $_ENV['SUPABASE_BUCKET'] : (isset($_SERVER['SUPABASE_BUCKET']) ? $_SERVER['SUPABASE_BUCKET'] : 'uploads'));
-			$uploaded = $this->pushToSupabaseStorage($localFile, $fileName, $folderClean, $supabaseUrl, $supabaseKey, $bucket, $uploadData['file_type']);
+			$uploaded = $this->pushToSupabaseStorage($localFile, $fileName, $folderClean, $cfg['url'], $cfg['key'], $cfg['bucket'], $uploadData['file_type']);
 
 			// Jika di serverless/Vercel, hapus file lokal temp setelah terkirim ke Supabase
 			if ( ! $isWritable && is_file($localFile))
@@ -90,11 +88,74 @@ class Admin_Controller extends CI_Controller {
 	}
 
 	/**
+	 * Ambil environment variable dengan pembersihan whitespace, newline, dan tanda kutip.
+	 */
+	protected function getCleanEnv($key, $default = '')
+	{
+		$val = getenv($key);
+		if ($val === FALSE || $val === '')
+		{
+			$val = isset($_ENV[$key]) ? $_ENV[$key] : (isset($_SERVER[$key]) ? $_SERVER[$key] : $default);
+		}
+		$val = (string) $val;
+		return trim($val, "\"' \t\n\r\0\x0B");
+	}
+
+	/**
+	 * Ambil konfigurasi Supabase Storage yang sudah dinormalisasi dan divalidasi.
+	 */
+	protected function getSupabaseConfig()
+	{
+		$url    = $this->getCleanEnv('SUPABASE_URL');
+		$key    = $this->getCleanEnv('SUPABASE_KEY');
+		$bucket = $this->getCleanEnv('SUPABASE_BUCKET', 'uploads');
+
+		if ($url === '' || $key === '')
+		{
+			return NULL;
+		}
+
+		// Jika pengguna memasukkan URL pooler/database alih-alih URL project REST
+		if (strpos($url, 'pooler.supabase.com') !== FALSE || strpos($url, 'postgres://') !== FALSE)
+		{
+			if (preg_match('/([a-z0-9]{20})/', $url, $m))
+			{
+				$url = 'https://' . $m[1] . '.supabase.co';
+			}
+		}
+
+		// Pastikan skema http:// atau https:// ada
+		if ( ! preg_match('#^https?://#i', $url))
+		{
+			$url = 'https://' . $url;
+		}
+
+		// Buang spasi dan karakter newline di dalam URL
+		$url = str_replace(array(' ', "\r", "\n", "\t"), '', $url);
+		$url = rtrim($url, '/');
+
+		// Bersihkan nama bucket dari karakter liar
+		$bucket = trim(preg_replace('/[^a-zA-Z0-9_-]/', '', $bucket));
+		if ($bucket === '')
+		{
+			$bucket = 'uploads';
+		}
+
+		return array(
+			'url'    => $url,
+			'key'    => $key,
+			'bucket' => $bucket
+		);
+	}
+
+	/**
 	 * Kirim file ke Supabase Storage via REST API (mendukung curl dan stream context).
 	 */
 	protected function pushToSupabaseStorage($filePath, $fileName, $folder, $supabaseUrl, $supabaseKey, $bucket, $mimeType)
 	{
-		$url = rtrim($supabaseUrl, '/') . '/storage/v1/object/' . $bucket . '/' . trim($folder, '/') . '/' . rawurlencode($fileName);
+		$folderClean = trim($folder, '/');
+		$pathPrefix  = ($folderClean !== '') ? ($folderClean . '/') : '';
+		$url         = rtrim($supabaseUrl, '/') . '/storage/v1/object/' . $bucket . '/' . $pathPrefix . rawurlencode($fileName);
 
 		$fileData = @file_get_contents($filePath);
 		if ($fileData === FALSE)
@@ -130,11 +191,21 @@ class Admin_Controller extends CI_Controller {
 				return TRUE;
 			}
 
+			// Berikan pesan ramah jika bucket belum ada atau RLS belum disetel
 			$msg = 'Supabase Storage error (HTTP ' . $httpCode . '): ' . $response;
-			if ($curlErr)
+			if ($httpCode === 404 && strpos($response, 'Bucket not found') !== FALSE)
+			{
+				$msg = "Bucket '{$bucket}' belum dibuat di Supabase Storage. Silakan buat bucket '{$bucket}' atau jalankan SQL perizinan storage.";
+			}
+			elseif ($httpCode === 403 || strpos($response, 'row-level security') !== FALSE)
+			{
+				$msg = "Izin upload Supabase ditolak (RLS). Pastikan policy INSERT pada storage.objects untuk bucket '{$bucket}' sudah aktif.";
+			}
+			elseif ($curlErr)
 			{
 				$msg .= ' (' . $curlErr . ')';
 			}
+
 			$this->session->set_flashdata('error', $msg);
 			return FALSE;
 		}
@@ -148,7 +219,7 @@ class Admin_Controller extends CI_Controller {
 				'ignore_errors' => TRUE
 			)
 		);
-		$context = stream_context_create($options);
+		$context  = stream_context_create($options);
 		$response = @file_get_contents($url, FALSE, $context);
 
 		if (isset($http_response_header) && preg_match('#HTTP/\S+\s+2\d\d#', $http_response_header[0]))
@@ -171,6 +242,7 @@ class Admin_Controller extends CI_Controller {
 		}
 
 		$folderClean = trim($folder, '/');
+		$pathPrefix  = ($folderClean !== '') ? ($folderClean . '/') : '';
 
 		// 1. Hapus dari disk lokal jika file ada
 		$path = FCPATH . 'assets/uploads/' . $folderClean . '/' . $fileName;
@@ -180,17 +252,14 @@ class Admin_Controller extends CI_Controller {
 		}
 
 		// 2. Hapus dari Supabase Storage jika dikonfigurasi
-		$supabaseUrl = getenv('SUPABASE_URL') ?: (isset($_ENV['SUPABASE_URL']) ? $_ENV['SUPABASE_URL'] : (isset($_SERVER['SUPABASE_URL']) ? $_SERVER['SUPABASE_URL'] : ''));
-		$supabaseKey = getenv('SUPABASE_KEY') ?: (isset($_ENV['SUPABASE_KEY']) ? $_ENV['SUPABASE_KEY'] : (isset($_SERVER['SUPABASE_KEY']) ? $_SERVER['SUPABASE_KEY'] : ''));
-
-		if ( ! empty($supabaseUrl) && ! empty($supabaseKey))
+		$cfg = $this->getSupabaseConfig();
+		if ($cfg !== NULL)
 		{
-			$bucket = getenv('SUPABASE_BUCKET') ?: (isset($_ENV['SUPABASE_BUCKET']) ? $_ENV['SUPABASE_BUCKET'] : (isset($_SERVER['SUPABASE_BUCKET']) ? $_SERVER['SUPABASE_BUCKET'] : 'uploads'));
-			$url    = rtrim($supabaseUrl, '/') . '/storage/v1/object/' . $bucket . '/' . $folderClean . '/' . rawurlencode($fileName);
+			$url = $cfg['url'] . '/storage/v1/object/' . $cfg['bucket'] . '/' . $pathPrefix . rawurlencode($fileName);
 
 			$headers = array(
-				'Authorization: Bearer ' . $supabaseKey,
-				'apikey: ' . $supabaseKey
+				'Authorization: Bearer ' . $cfg['key'],
+				'apikey: ' . $cfg['key']
 			);
 
 			if (function_exists('curl_init'))

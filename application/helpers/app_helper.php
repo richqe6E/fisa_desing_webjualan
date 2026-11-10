@@ -187,10 +187,35 @@ if ( ! function_exists('upload_asset_url'))
 
 		// 2. Cek Supabase Storage jika dikonfigurasi via env
 		$supabaseUrl = getenv('SUPABASE_URL') ?: (isset($_ENV['SUPABASE_URL']) ? $_ENV['SUPABASE_URL'] : (isset($_SERVER['SUPABASE_URL']) ? $_SERVER['SUPABASE_URL'] : ''));
-		if ( ! empty($supabaseUrl))
+		$supabaseUrl = trim((string) $supabaseUrl, "\"' \t\n\r\0\x0B");
+
+		if ($supabaseUrl !== '')
 		{
+			// Jika user memasukkan URL pooler alih-alih URL REST
+			if (strpos($supabaseUrl, 'pooler.supabase.com') !== FALSE || strpos($supabaseUrl, 'postgres://') !== FALSE)
+			{
+				if (preg_match('/([a-z0-9]{20})/', $supabaseUrl, $m))
+				{
+					$supabaseUrl = 'https://' . $m[1] . '.supabase.co';
+				}
+			}
+
+			if ( ! preg_match('#^https?://#i', $supabaseUrl))
+			{
+				$supabaseUrl = 'https://' . $supabaseUrl;
+			}
+			$supabaseUrl = str_replace(array(' ', "\r", "\n", "\t"), '', $supabaseUrl);
+			$supabaseUrl = rtrim($supabaseUrl, '/');
+
 			$bucket = getenv('SUPABASE_BUCKET') ?: (isset($_ENV['SUPABASE_BUCKET']) ? $_ENV['SUPABASE_BUCKET'] : (isset($_SERVER['SUPABASE_BUCKET']) ? $_SERVER['SUPABASE_BUCKET'] : 'uploads'));
-			return rtrim($supabaseUrl, '/') . '/storage/v1/object/public/' . $bucket . '/' . $folderClean . '/' . rawurlencode($fileName);
+			$bucket = trim(preg_replace('/[^a-zA-Z0-9_-]/', '', (string) $bucket));
+			if ($bucket === '')
+			{
+				$bucket = 'uploads';
+			}
+
+			$pathPrefix = ($folderClean !== '') ? ($folderClean . '/') : '';
+			return $supabaseUrl . '/storage/v1/object/public/' . $bucket . '/' . $pathPrefix . rawurlencode($fileName);
 		}
 
 		return base_url($localRel);
