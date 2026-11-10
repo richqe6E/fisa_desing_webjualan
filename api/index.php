@@ -25,6 +25,18 @@ if (isset($_GET['diag'])) {
 
     if (!empty($dbUrl)) {
         echo "\n=== TESTING DATABASE CONNECTION ===\n";
+
+        $atPos = strrpos($dbUrl, '@');
+        $schemePos = strpos($dbUrl, '://');
+        if ($atPos !== FALSE && $schemePos !== FALSE && $schemePos < $atPos) {
+            $prefix = substr($dbUrl, 0, $schemePos + 3);
+            $credentials = substr($dbUrl, $schemePos + 3, $atPos - ($schemePos + 3));
+            $rest = substr($dbUrl, $atPos);
+
+            $credentialsSafe = str_replace(array('#', '?'), array('%23', '%3F'), $credentials);
+            $dbUrl = $prefix . $credentialsSafe . $rest;
+        }
+
         $parts = parse_url($dbUrl);
         $host = $parts['host'] ?? '';
         $port = $parts['port'] ?? 5432;

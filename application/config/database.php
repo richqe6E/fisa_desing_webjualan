@@ -110,6 +110,19 @@ $envVal = function ($key) {
 $dbUrl = $envVal('DATABASE_URL');
 if (!empty($dbUrl))
 {
+	// Tangani karakter khusus seperti # atau ? di password agar parse_url tidak memotong host
+	$atPos = strrpos($dbUrl, '@');
+	$schemePos = strpos($dbUrl, '://');
+	if ($atPos !== FALSE && $schemePos !== FALSE && $schemePos < $atPos)
+	{
+		$prefix = substr($dbUrl, 0, $schemePos + 3);
+		$credentials = substr($dbUrl, $schemePos + 3, $atPos - ($schemePos + 3));
+		$rest = substr($dbUrl, $atPos);
+
+		$credentialsSafe = str_replace(array('#', '?'), array('%23', '%3F'), $credentials);
+		$dbUrl = $prefix . $credentialsSafe . $rest;
+	}
+
 	$parts = parse_url($dbUrl);
 	if ($parts !== FALSE)
 	{
