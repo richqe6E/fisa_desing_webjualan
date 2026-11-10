@@ -38,7 +38,7 @@ $ystoreBaseUrl = getenv('APP_BASE_URL');
 
 if ($ystoreBaseUrl !== FALSE && $ystoreBaseUrl !== '')
 {
-	$config['base_url'] = rtrim($ystoreBaseUrl, '/') . '/';
+	$config['base_url'] = rtrim(trim($ystoreBaseUrl), '/') . '/';
 }
 elseif ( ! empty($_SERVER['HTTP_HOST']) && isset($_SERVER['SCRIPT_NAME']))
 {
