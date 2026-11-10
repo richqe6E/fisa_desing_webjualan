@@ -1,0 +1,19 @@
+# CodeIgniter
+application/logs/log-*.php
+!application/logs/index.html
+application/cache/*
+!application/cache/index.html
+application/config/database.local.php
+
+# Environment variables & local credentials
+.env
+.env.*
+!.env.example
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.log

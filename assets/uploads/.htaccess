@@ -1,0 +1,16 @@
+# ---------------------------------------------------------------------------
+# Folder unggahan — hanya boleh menyajikan gambar.
+#
+# Berlapis dengan aturan RewriteRule di .htaccess root: bila ada file skrip
+# yang lolos validasi upload, file itu tetap tidak bisa dieksekusi di sini.
+# ---------------------------------------------------------------------------
+
+<FilesMatch "\.(php|php[0-9]|phtml|phar|pl|py|cgi|asp|aspx|jsp|sh)$">
+	<IfModule authz_core_module>
+		Require all denied
+	</IfModule>
+	<IfModule !authz_core_module>
+		Order allow,deny
+		Deny from all
+	</IfModule>
+</FilesMatch>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modulive – Sustainable Furniture</title>
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" onerror="document.documentElement.classList.add('no-icons')">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- Foto dari Unsplash (Unsplash License, gratis dipakai tanpa atribusi). Ganti atribut src pada tiap <img> dengan foto produk Anda sendiri. -->
+<header class="site-header" id="siteHeader"><div class="nav container">
+  <a href="#" class="logo"><svg class="logo-mark" viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 0c1 6.5 5.500 11 12 12-6.500 1-11 5.500-12 12-1-6.500-5.500-11-12-12C6.500 11 11 6.500 12 0z"/></svg>Modulive</a>
+  <nav id="menu" class="menu">
+    <a href="#products">Products</a><a href="#about">About Us</a><a href="#store">Our Store</a><a href="#footer">Delivery</a>
+  </nav>
+  <div class="nav-icons">
+    <button id="searchBtn" aria-label="Search" aria-expanded="false" aria-controls="searchbar"><i class="bi bi-search" data-fb="⌕"></i></button><button id="cartBtn" class="cartbtn" aria-label="Cart"><i class="bi bi-bag" data-fb="🛒"></i><span class="badge" id="cartCount" hidden>0</span></button>
+    <button id="burger" class="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><i class="bi bi-list" data-fb="☰"></i></button>
+  </div>
+</div>
+<div class="searchbar container" id="searchbar" hidden><input id="q" type="search" placeholder="Cari produk (mis. chair, cabinet)…" aria-label="Cari produk"></div>
+</header>
+
+<section class="hero container">
+  <h1><span class="line"><span>Transform
+    <img width="80" height="44" class="pill" src="https://images.unsplash.com/photo-1618219944342-824e40a13285?auto=format&fit=crop&w=160&h=88&q=75" alt="">
+    Space with</span></span>
+    <span class="line"><span>
+    <img width="110" height="44" class="pill wide" src="https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=220&h=88&q=75" alt="">
+    Sustainable Furniture</span></span></h1>
+  <div class="hero-grid">
+    <div class="hero-main">
+      <img width="900" height="560" src="https://images.unsplash.com/photo-1616132205093-3158f3a65fb5?auto=format&fit=crop&w=1400&h=800&q=75" alt="Blue sofa">
+      <div class="notch tl reviews"><span class="avatars"><i></i><i></i><i></i><b>+12k</b></span><small>Check<br>reviews</small></div>
+      <div class="notch br"><a href="products.html" class="btn-dark">Shop Now <span class="arrow"><i class="bi bi-arrow-up-right" data-fb="↗"></i></span></a></div>
+    </div>
+    <div class="hero-side">
+      <a class="mini" href="product.html#muffin-chair"><img width="300" height="200" src="https://images.unsplash.com/photo-1618219944342-824e40a13285?auto=format&fit=crop&w=420&h=300&q=75" alt="Muffin Chair"><div><span>Muffin Chair<br><small class="stars"><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i></small></span><strong>$126.00</strong></div></a>
+      <a class="mini" href="product.html#elite-chair"><img width="300" height="200" src="https://images.unsplash.com/photo-1615971677499-5467cbab01c0?auto=format&fit=crop&w=420&h=300&q=75" alt="Elite Chair"><div><span>Elite Chair<br><small class="stars"><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i><i class="bi bi-star-fill" data-fb="★"></i></small></span><strong>$150.00</strong></div></a>
+    </div>
+  </div>
+</section>
+
+<section class="stats container">
+  <div data-reveal><b data-count="18">18K+</b><p>Happy and loyal customers buy out products</p></div>
+  <div data-reveal><b data-count="700">700+</b><p>Products than we have created and sold on the market</p></div>
+  <div data-reveal><b data-count="95">95%</b><p>Customers who have purchased and next come back</p></div>
+</section>
+
+<section id="products" class="container products">
+  <h2 data-reveal>Our Best Quality Products</h2>
+  <div class="tabs" id="tabs" data-reveal>
+    <button class="active" aria-pressed="true" data-filter="all">All</button><button aria-pressed="false" data-filter="chair">Chair</button><button aria-pressed="false" data-filter="cabinet">Cabinet</button><button aria-pressed="false" data-filter="sofa">Sofa</button><button aria-pressed="false" data-filter="bed">Bed</button>
+  </div>
+  <div class="grid" id="grid">
+    <article class="card" data-reveal data-cat="cabinet"><img width="300" height="240" loading="lazy" src="https://images.unsplash.com/photo-1581467695675-7e3753e5ab26?auto=format&fit=crop&w=700&h=560&q=75" alt="Easy Drawer"><div class="row"><span>Easy Drawer</span><strong>$66.00</strong></div><div class="notch br"><a class="circle" href="product.html#easy-drawer" aria-label="View Easy Drawer"><i class="bi bi-arrow-up-right" data-fb="↗"></i></a></div></article>
+    <article class="card" data-reveal data-cat="chair sofa"><img width="300" height="240" loading="lazy" src="https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=700&h=560&q=75" alt="Easy Sofa"><div class="row"><span>Easy Sofa</span><strong>$126.00</strong></div><div class="notch br"><a class="circle" href="product.html#easy-sofa" aria-label="View Easy Sofa"><i class="bi bi-arrow-up-right" data-fb="↗"></i></a></div></article>
+    <article class="card" data-reveal data-cat="cabinet"><img width="300" height="240" loading="lazy" src="https://images.unsplash.com/photo-1556908221-f685cdb3b0ea?auto=format&fit=crop&w=700&h=560&q=75" alt="Cabinet"><div class="row"><span>Cabinet</span><strong>$138.00</strong></div><div class="notch br"><a class="circle" href="product.html#cabinet" aria-label="View Cabinet"><i class="bi bi-arrow-up-right" data-fb="↗"></i></a></div></article>
+    <article class="card" data-reveal data-cat="chair"><img width="300" height="240" loading="lazy" src="https://images.unsplash.com/photo-1618219944342-824e40a13285?auto=format&fit=crop&w=700&h=560&q=75" alt="Rumpi Chair"><div class="row"><span>Rumpi Chair</span><strong>$100.00</strong></div><div class="notch br"><a class="circle" href="product.html#rumpi-chair" aria-label="View Rumpi Chair"><i class="bi bi-arrow-up-right" data-fb="↗"></i></a></div></article>
+    <article class="card" data-reveal data-cat="bed sofa"><img width="300" height="240" loading="lazy" src="https://images.unsplash.com/photo-1615971677499-5467cbab01c0?auto=format&fit=crop&w=700&h=560&q=75" alt="Romp Stool"><div class="row"><span>Romp Stool</span><strong>$86.00</strong></div><div class="notch br"><a class="circle" href="product.html#romp-stool" aria-label="View Romp Stool"><i class="bi bi-arrow-up-right" data-fb="↗"></i></a></div></article>
+    <article class="card" data-reveal data-cat="cabinet bed"><img width="300" height="240" loading="lazy" src="https://images.unsplash.com/photo-1552154083-7213635f4298?auto=format&fit=crop&w=700&h=560&q=75" alt="Almirah"><div class="row"><span>Almirah</span><strong>$222.00</strong></div><div class="notch br"><a class="circle" href="product.html#almirah" aria-label="View Almirah"><i class="bi bi-arrow-up-right" data-fb="↗"></i></a></div></article>
+  </div>
+  <p id="empty" class="empty" role="status" hidden>Belum ada produk di kategori ini.</p>
+  <a href="products.html" class="btn-dark all-btn" data-reveal>View all products <span class="arrow"><i class="bi bi-arrow-up-right" data-fb="↗"></i></span></a>
+</section>
+
+<section id="about" class="container why">
+  <div class="why-media" data-reveal>
+    <div class="video"><img width="700" height="500" loading="lazy" src="https://images.unsplash.com/photo-1724582586529-62622e50c0b3?auto=format&fit=crop&w=1200&h=860&q=75" alt="Living room"><button class="play" id="playBtn" aria-label="Play video"><i class="bi bi-play-fill" data-fb="▶"></i></button></div>
+    <p>Watch the video and learn<br>more about Modulive</p>
+  </div>
+  <div class="why-text" data-reveal>
+    <h2>Why Choose Us</h2>
+    <p class="sub">Here are the reasons why Modulive stands out as the ultimate choice in sustainable furniture</p>
+    <div class="acc">
+      <div class="acc-item"><button class="acc-head" id="ah1" aria-expanded="false" aria-controls="ab1"><span>Sustainability</span><i class="bi bi-plus-lg" data-fb="+"></i></button><div class="acc-body" id="ab1" role="region" aria-labelledby="ah1"><p>Lorem ipsum dolor sit amet consectetur. Tincidunt est urna diam blandit fermentum nunc dolor.</p></div></div>
+      <div class="acc-item open"><button class="acc-head" id="ah2" aria-expanded="true" aria-controls="ab2"><span>Unrivaled quality</span><i class="bi bi-x-lg" data-fb="×"></i></button><div class="acc-body" id="ab2" role="region" aria-labelledby="ah2"><p>Lorem ipsum dolor sit amet consectetur. Tincidunt est urna diam blandit fermentum nunc dolor.</p></div></div>
+      <div class="acc-item"><button class="acc-head" id="ah3" aria-expanded="false" aria-controls="ab3"><span>Unmatched variety</span><i class="bi bi-plus-lg" data-fb="+"></i></button><div class="acc-body" id="ab3" role="region" aria-labelledby="ah3"><p>Lorem ipsum dolor sit amet consectetur. Tincidunt est urna diam blandit fermentum nunc dolor.</p></div></div>
+      <div class="acc-item"><button class="acc-head" id="ah4" aria-expanded="false" aria-controls="ab4"><span>Legacy of excellence</span><i class="bi bi-plus-lg" data-fb="+"></i></button><div class="acc-body" id="ab4" role="region" aria-labelledby="ah4"><p>Lorem ipsum dolor sit amet consectetur. Tincidunt est urna diam blandit fermentum nunc dolor.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="store" class="container cta" data-reveal>
+  <img width="1200" height="460" loading="lazy" src="https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=1800&h=700&q=75" alt="Blue boucle chairs">
+  <div class="notch tr"><a href="#" class="btn-dark">Book an appointment <span class="arrow"><i class="bi bi-arrow-up-right" data-fb="↗"></i></span></a></div>
+  <div class="cta-text"><h2>When We Create Furniture, We Strive For The Finest Quality.</h2><a href="#products" class="btn-light">See Products</a></div>
+</section>
+
+<section class="container news" data-reveal>
+  <h2>Subscribe to our newsletter and<br>grab <b>30% OFF</b></h2>
+  <form id="newsForm" novalidate>
+    <span class="env"><i class="bi bi-envelope-paper" data-fb="✉"></i></span>
+    <input type="email" id="email" placeholder="Your Email.." aria-label="Email">
+    <button class="btn-dark" type="submit">Subscribe</button>
+  </form>
+  <p id="msg" class="msg" role="status"></p>
+</section>
+
+<footer id="footer" class="footer">
+  <div class="container fgrid">
+    <div class="fcol"><h4>Service</h4><a href="#">Legal Notice</a><a href="#">Data Protection</a></div>
+    <div class="fcol"><h4>Newsletter</h4><a href="#">Enter Email Address</a><a href="#">Sign Up</a></div>
+    <a href="#" class="logo flogo"><svg class="logo-mark" viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 0c1 6.5 5.500 11 12 12-6.500 1-11 5.500-12 12-1-6.500-5.500-11-12-12C6.500 11 11 6.500 12 0z"/></svg>Modulive</a>
+    <div class="fcol"><h4>Connect</h4><a href="#">Instagram</a><a href="#">Facebook</a></div>
+    <div class="fcol"><h4>Contact</h4><span>12 B Street,Estern Alberta</span><a href="mailto:Global@Modulive.com" class="u">Global@Modulive.com</a></div>
+  </div>
+  <div class="container fbot"><small>© Copyright 2024. Modulive All Rights Reserved.</small><span><a href="#">Terms of service</a><a href="#">Privacy Policy</a></span></div>
+</footer>
+<dialog id="cartDialog" aria-labelledby="cartTitle">
+  <div class="cart-head"><h3 id="cartTitle">Keranjang <span id="cartQty">(0)</span></h3><button id="cartClose" class="cart-x" aria-label="Close cart"><i class="bi bi-x-lg" data-fb="×"></i></button></div>
+  <ul id="cartList" class="cart-list"></ul>
+  <div id="cartEmpty" class="cart-empty"><i class="bi bi-bag" data-fb="🛒"></i><p>Keranjang masih kosong.</p><a href="products.html" class="btn-dark" id="cartShop">Lihat produk</a></div>
+  <div id="cartFoot" class="cart-foot" hidden>
+    <div class="cart-total"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
+    <button class="btn-dark cart-checkout" id="cartCheckout">Checkout <span class="arrow"><i class="bi bi-arrow-up-right" data-fb="↗"></i></span></button>
+    <button class="cart-clear" id="cartClear">Kosongkan keranjang</button>
+  </div>
+</dialog>
+<dialog id="videoDialog" aria-label="Video Modulive">
+  <button class="vclose" id="vclose" aria-label="Close video"><i class="bi bi-x-lg" data-fb="×"></i></button>
+  <!-- Ganti blok ini dengan <iframe src="URL_VIDEO" allowfullscreen></iframe> atau <video controls src="video.mp4"></video> -->
+  <div class="vplace">Tempat video Modulive</div>
+</dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="products.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

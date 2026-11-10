@@ -1,0 +1,60 @@
+RewriteEngine On
+
+# Cegah browsing isi direktori (mis. /assets/uploads/products/).
+# Bila hosting menolak directive Options (error 500), baris ini bisa dihapus —
+# folder upload sudah punya index.html placeholder sebagai penjaga.
+<IfModule mod_autoindex.c>
+	Options -Indexes
+</IfModule>
+
+# Header keamanan dasar (aman untuk situs statis + PHP biasa).
+<IfModule mod_headers.c>
+	Header always set X-Content-Type-Options "nosniff"
+	Header always set Referrer-Policy "strict-origin-when-cross-origin"
+	Header always set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# Block direct access to all dotfiles (.env, .gitignore, .htaccess, ...)
+<FilesMatch "^\.">
+	Require all denied
+</FilesMatch>
+
+# Block direct access to sensitive files: database.sql, *.md, logs, dumps, etc.
+<FilesMatch "\.(sql|md|markdown|log|bak|old|orig|swp|dist|ini|sh|lock|yml|yaml|json)$">
+	<IfModule authz_core_module>
+		Require all denied
+	</IfModule>
+	<IfModule !authz_core_module>
+		Order allow,deny
+		Deny from all
+	</IfModule>
+</FilesMatch>
+
+# Belt-and-braces: block database dumps by name even without the .sql extension
+<Files "database.sql">
+	<IfModule authz_core_module>
+		Require all denied
+	</IfModule>
+	<IfModule !authz_core_module>
+		Order allow,deny
+		Deny from all
+	</IfModule>
+</Files>
+
+# Folder upload hanya boleh menyajikan gambar: tolak permintaan ke file skrip
+# (berlapis dengan assets/uploads/.htaccess, dan bekerja di subfolder mana pun).
+RewriteRule ^assets/uploads/.*\.(php|php[0-9]|phtml|phar|pl|py|cgi|asp|aspx|jsp|sh)$ - [F,L]
+
+# Force HTTPS on production (skip localhost so local dev keeps working).
+#
+# AKTIFKAN saat domain sudah aktif & SSL (AutoSSL cPanel) sudah terpasang:
+# hapus tanda '#' di 3 baris di bawah, lalu isi APP_BASE_URL juga
+# (lihat catatan di akhir file ini).
+# RewriteCond %{HTTPS} off
+# RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:[0-9]+)?$ [NC]
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php/$1 [L]
+

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Products – Modulive</title>
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" onerror="document.documentElement.classList.add('no-icons')">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header" id="siteHeader"><div class="nav container">
+  <a href="index.html" class="logo"><svg class="logo-mark" viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 0c1 6.5 5.500 11 12 12-6.500 1-11 5.500-12 12-1-6.500-5.500-11-12-12C6.500 11 11 6.500 12 0z"/></svg>Modulive</a>
+  <nav id="menu" class="menu">
+    <a href="products.html" aria-current="page">Products</a><a href="index.html#about">About Us</a><a href="index.html#store">Our Store</a><a href="#footer">Delivery</a>
+  </nav>
+  <div class="nav-icons">
+    <button id="searchBtn" aria-label="Search" aria-expanded="false" aria-controls="searchbar"><i class="bi bi-search" data-fb="⌕"></i></button><button id="cartBtn" class="cartbtn" aria-label="Cart"><i class="bi bi-bag" data-fb="🛒"></i><span class="badge" id="cartCount" hidden>0</span></button>
+    <button id="burger" class="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><i class="bi bi-list" data-fb="☰"></i></button>
+  </div>
+</div>
+<div class="searchbar container" id="searchbar" hidden><input id="q" type="search" placeholder="Cari produk (mis. chair, cabinet)…" aria-label="Cari produk"></div>
+</header>
+
+<main class="container">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a><i class="bi bi-chevron-right" data-fb="›"></i><span aria-current="page">Products</span></nav>
+  <section id="products" class="products plist">
+    <h1 class="plist-title">Our Best Quality Products</h1>
+    <p class="plist-sub">Sustainable furniture, made to last. Pick a category or sort by price.</p>
+    <div class="tabs" id="tabs">
+      <button class="active" aria-pressed="true" data-filter="all">All</button><button aria-pressed="false" data-filter="chair">Chair</button><button aria-pressed="false" data-filter="cabinet">Cabinet</button><button aria-pressed="false" data-filter="sofa">Sofa</button><button aria-pressed="false" data-filter="bed">Bed</button>
+    </div>
+    <div class="toolbar">
+      <p id="count" class="count" aria-live="polite">Showing 0 products</p>
+      <label class="sortbox"><span>Sort by</span>
+        <select id="sort" aria-label="Sort products">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price: low to high</option>
+          <option value="price-desc">Price: high to low</option>
+          <option value="name">Name: A–Z</option>
+        </select>
+      </label>
+    </div>
+    <div class="grid" id="grid"></div>
+    <p id="empty" class="empty" role="status" hidden>Belum ada produk di kategori ini.</p>
+  </section>
+</main>
+
+<section class="container news" data-reveal>
+  <h2>Subscribe to our newsletter and<br>grab <b>30% OFF</b></h2>
+  <form id="newsForm" novalidate>
+    <span class="env"><i class="bi bi-envelope-paper" data-fb="✉"></i></span>
+    <input type="email" id="email" placeholder="Your Email.." aria-label="Email">
+    <button class="btn-dark" type="submit">Subscribe</button>
+  </form>
+  <p id="msg" class="msg" role="status"></p>
+</section>
+<dialog id="cartDialog" aria-labelledby="cartTitle">
+  <div class="cart-head"><h3 id="cartTitle">Keranjang <span id="cartQty">(0)</span></h3><button id="cartClose" class="cart-x" aria-label="Close cart"><i class="bi bi-x-lg" data-fb="×"></i></button></div>
+  <ul id="cartList" class="cart-list"></ul>
+  <div id="cartEmpty" class="cart-empty"><i class="bi bi-bag" data-fb="🛒"></i><p>Keranjang masih kosong.</p><a href="products.html" class="btn-dark" id="cartShop">Lihat produk</a></div>
+  <div id="cartFoot" class="cart-foot" hidden>
+    <div class="cart-total"><span>Total</span><strong id="cartTotal">$0.00</strong></div>
+    <button class="btn-dark cart-checkout" id="cartCheckout">Checkout <span class="arrow"><i class="bi bi-arrow-up-right" data-fb="↗"></i></span></button>
+    <button class="cart-clear" id="cartClear">Kosongkan keranjang</button>
+  </div>
+</dialog>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<footer id="footer" class="footer">
+  <div class="container fgrid">
+    <div class="fcol"><h4>Service</h4><a href="#">Legal Notice</a><a href="#">Data Protection</a></div>
+    <div class="fcol"><h4>Newsletter</h4><a href="#">Enter Email Address</a><a href="#">Sign Up</a></div>
+    <a href="#" class="logo flogo"><svg class="logo-mark" viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 0c1 6.5 5.500 11 12 12-6.500 1-11 5.500-12 12-1-6.500-5.500-11-12-12C6.500 11 11 6.500 12 0z"/></svg>Modulive</a>
+    <div class="fcol"><h4>Connect</h4><a href="#">Instagram</a><a href="#">Facebook</a></div>
+    <div class="fcol"><h4>Contact</h4><span>12 B Street,Estern Alberta</span><a href="mailto:Global@Modulive.com" class="u">Global@Modulive.com</a></div>
+  </div>
+  <div class="container fbot"><small>© Copyright 2024. Modulive All Rights Reserved.</small><span><a href="#">Terms of service</a><a href="#">Privacy Policy</a></span></div>
+</footer>
+<script src="products.js"></script>
+<script src="listing.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
