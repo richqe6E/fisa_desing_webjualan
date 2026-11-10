@@ -122,11 +122,13 @@ if (!empty($dbUrl))
 
 		if ($isPg)
 		{
+			// Supabase PostgreSQL mewajibkan sslmode=require
+			$dsn = 'pgsql:host=' . $host . ';port=' . $port . ';dbname=' . $name . ';sslmode=require';
 			if (extension_loaded('pdo_pgsql'))
 			{
 				$db['default']['dbdriver'] = 'pdo';
 				$db['default']['subdriver'] = 'pgsql';
-				$db['default']['dsn'] = 'pgsql:host=' . $host . ';port=' . $port . ';dbname=' . $name;
+				$db['default']['dsn'] = $dsn;
 			}
 			else
 			{
@@ -154,8 +156,11 @@ if ($db['default']['dbdriver'] === 'postgre' && !function_exists('pg_connect') &
 	$port = !empty($db['default']['port']) ? $db['default']['port'] : 5432;
 	$db['default']['dbdriver'] = 'pdo';
 	$db['default']['subdriver'] = 'pgsql';
-	$db['default']['dsn'] = 'pgsql:host=' . $db['default']['hostname'] . ';port=' . $port . ';dbname=' . $db['default']['database'];
+	$db['default']['dsn'] = 'pgsql:host=' . $db['default']['hostname'] . ';port=' . $port . ';dbname=' . $db['default']['database'] . ';sslmode=require';
 }
+
+// Aktifkan debug DB agar pesan error tampil jelas jika ada kegagalan koneksi
+$db['default']['db_debug'] = TRUE;
 
 /*
 |--------------------------------------------------------------------------
